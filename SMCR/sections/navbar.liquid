@@ -1,0 +1,116 @@
+<nav class="bg-white fixed top-0 left-0 right-0 z-50 shadow-bottom-hd font-bold text-smcr-gray">
+
+    <!-- Desktop -->
+    <div class="max-w-screen-2xl mx-auto px-4 hidden lg:flex justify-between">
+        <!-- Left Items -->
+        <div class="flex items-center space-x-4">
+            <!-- Logo -->
+            <div class="flex items-center"> 
+                <a href="/">
+                    <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ section.settings.logo.alt }}" loading="lazy" width="216" height="34">
+                </a>
+            </div>
+            <!-- Menu -->
+            <div>
+                <ul class="flex items-center space-x-1">
+                    {% for link in linklists[section.settings.menu].links %}
+                        {% assign child_list_handle = link.title | handleize %}
+                        {% if linklists[child_list_handle].links != blank %}
+                            <li class="relative parent-nav" x-data @click.prevent>
+                                <a class="py-5 px-3 flex items-center" href="{{ link.url }}" @click.prevent="open = !open">
+                                    {{ link.title }}
+                                    <span class="ml-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-smcr-navy" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                </a>
+                                <ul class="sub-nav">
+                                    {% for childlink in linklists[child_list_handle].links %}
+                                        <li><a href="{{ childlink.url }}">{{ childlink.title | escape }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="py-5 px-3">
+                                <a href="{{ link.url }}">{{ link.title }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>  
+        <!-- Right Items -->
+        <div class="flex items-center space-x-1">
+            <!-- Login / Account / Cart -->
+            {% if shop.customer_accounts_enabled %}
+                {% if customer %}
+                    <a href="/account" class="py-5 px-3">account</a>
+                    {%- comment -%}{{ 'log out'  | customer_logout_link }}{%- endcomment -%}
+                {% else %}
+                    <a href="{{ routes.account_login_url }}" class="py-5 px-3 flex items-center">
+                        <span class="mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-smcr-navy" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        Log In
+                    </a>
+                    {%- comment -%}{{ 'register' | customer_register_link }}{%- endcomment -%}
+                {% endif %}
+            {% endif %}
+            <a href="/cart" class="py-5 px-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-smcr-navy" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Mobile -->
+    <div class="max-w-screen-2xl mx-auto px-4 flex lg:hidden justify-between">
+        <!-- Hamburger-->
+        <div class="flex items-center">
+            <button class="p-3 rounded transition-colors duration-150 hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-smcr-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Logo -->
+        <div class="flex items-center">
+            <a href="/">
+                <img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ section.settings.logo.alt }}" loading="lazy" width="178" height="28">
+            </a>
+        </div>
+        
+        <!-- Cart -->
+        <div class="flex items-center">
+            <a href="/cart" class="py-5 px-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-smcr-navy" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+</nav>
+
+{% schema %}
+{
+    "name": "Header",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Header Logo"
+        },
+        {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Header Menu"
+        }
+    ]
+}
+{% endschema %}

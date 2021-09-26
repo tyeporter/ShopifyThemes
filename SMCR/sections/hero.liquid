@@ -1,0 +1,38 @@
+<section class="bg-smcr-light-gray text-smcr-gray">
+    <div class="max-w-screen-2xl mx-auto px-4 py-24 flex flex-col justify-center space-y-4 text-center">
+        <!-- Heading -->
+        <div>
+            <h1 class="font-bungee text-5xl">{{ section.settings.heading }}</h1>
+        </div>
+        <!-- Statement -->
+        <div class="font-bold flex justify-center text-justify">
+            {{ section.settings.statement }}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Hero",
+    "settings": [
+        {
+            "type": "text",
+            "id": "heading",
+            "default": "Default Heading",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "statement",
+            "default": "<p>This is an example statement</p>",
+            "label": "Statement"
+        }
+    ],
+    "presets": [
+        {
+            "category": "Hero",
+            "name": "Plain Hero"
+        }
+    ]
+}
+{% endschema %}

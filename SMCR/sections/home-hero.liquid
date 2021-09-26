@@ -1,0 +1,88 @@
+{%- assign background_image = section.settings.background_image -%}
+{%- capture text_color -%}
+    {% if background_image != blank %}#FFFFFF{%- else -%}#707070{% endif %}
+{%- endcapture -%}
+
+<div class="bg-smcr-light-gray {%- if background_image != blank %} text-white{%- else %} text-smcr-gray{%- endif %} overflow-hidden relative">
+    {% if section.settings.background_image != blank %}
+        <!-- Background Image -->
+        <div class="absolute top-0 bottom-0 left-0 right-0">
+            {% comment %}theme-check-disable{% endcomment %}
+            <img class="h-full w-full object-cover" src="{{ section.settings.background_image | img_url: 'master' }}" alt="{{ section.settings.background_image.alt }}">
+            {% comment %}theme-check-enable{% endcomment %}
+        </div>
+        
+        <!-- Background Image Overlay -->
+        <div class="absolute top-0 bottom-0 left-0 right-0 bg-black opacity-50"></div>
+    {% endif %}
+    
+    <div class="max-w-screen-2xl mx-auto px-4 py-24 flex flex-col justify-center space-y-4 text-center relative">
+        
+        <!-- Top Left Image -->
+        <div class="absolute -top-7 md:-top-14 left-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 md:h-44 w-auto" viewBox="0 0 345.031 412.563"><g transform="translate(-123.248 -51.126)"><path d="M135.644,291.09c129.9,91.876,209.221,88.787,264.629,34.1,52.841-52.15,84.8-153.964,84.8-153.964" transform="translate(404.188 -139.301) rotate(65)" fill="none" stroke="{{ text_color }}" stroke-width="15"/><line x1="69" y1="41" transform="translate(389 335)" fill="none" stroke="{{ text_color }}" stroke-linecap="round" stroke-width="15"/><line x1="69" y2="41" transform="translate(388 377)" fill="none" stroke="{{ text_color }}" stroke-linecap="round" stroke-width="15"/></g></svg>
+        </div>
+        <!-- Bottom Right Image -->
+        <div class="absolute -bottom-7 md:-bottom-14 right-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 md:h-44 w-auto"  viewBox="0 0 290.003 277.849"><g transform="translate(-11.459 182.535)"><path d="M26.416-117.235l114.97,37.564V75.094L26.416,38.389Z" transform="translate(0.597 2.26)" fill="#dcaa79"/><path d="M150.731-78.984l129.623-38.245V38.809L150.731,75.1Z" transform="translate(5.73 2.253)" fill="#ab7d69"/><path d="M149.222-91.207l119.13-34.986L149.222-166.87,42.275-126.193Z" transform="translate(0.161 0.625)" fill="#ab7d69"/><g transform="translate(148.931 -125.25)"><line y1="171.813" transform="translate(144.739)" fill="none" stroke="#3c434a" stroke-width="15"/><line y1="42.693" x2="144.739" fill="none" stroke="#3c434a" stroke-width="15"/><line x1="144.739" y2="40.61" transform="translate(0 171.813)" fill="none" stroke="#3c434a" stroke-width="15"/><line y2="169.73" transform="translate(0 42.693)" fill="none" stroke="#3c434a" stroke-width="15"/></g><g transform="translate(19.291 -125.561)"><line x1="129.64" y1="42.693" transform="translate(0)" fill="none" stroke="#3c434a" stroke-width="15"/><line y1="170.771" transform="translate(0)" fill="none" stroke="#3c434a" stroke-width="15"/><line x2="129.64" y2="41.652" transform="translate(0 171.082)" fill="none" stroke="#3c434a" stroke-width="15"/><line y2="169.73" transform="translate(129.64 43.004)" fill="none" stroke="#3c434a" stroke-width="15"/></g><g transform="translate(19.811 -174.19)"><line y1="48.941" x2="129.12" transform="translate(0)" fill="none" stroke="#3c434a" stroke-width="15"/><line x1="144.739" y1="48.941" transform="translate(129.12)" fill="none" stroke="#3c434a" stroke-width="15"/><line x1="144.739" y2="42.693" transform="translate(129.12 48.941)" fill="none" stroke="#3c434a" stroke-width="15"/><line x2="129.12" y2="42.693" transform="translate(0 48.941)" fill="none" stroke="#3c434a" stroke-width="15"/></g><path d="M16.667,43.547l-4.976-1.941V33.313h8.354Z" transform="translate(0.298 8.89)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M11.959-127.5v-4.46l6.606-2.556,5.168,7.463Z" transform="translate(0 1.961)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M146.3,83.323h0l-2.83.811-2.751-.9,2.751-7.138" transform="translate(5.316 10.657)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M284.343,44.816l5.521-1.563V31.729h-9.617Z" transform="translate(11.077 8.825)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M289.883-127.009V-132.5l-6.562-2.156-3.049,7.836Z" transform="translate(11.078 1.955)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M140.654-180.882,143.438-182l3.182,1.119-2.725,7.293Z" transform="translate(5.314)" fill="#3c434a" stroke="#3c434a" stroke-width="1"/><path d="M235.377-156.268,102.926-107.5l-7.954,2.929v50.981l-21.3-6.037L56.495-64.421v-51.5l141.137-53.773,21.319,7.583Z" transform="translate(1.839 5.698)" fill="#c1a67a" stroke="#3c434a" stroke-width="3"/><path d="M62.583-157.242l129.435,54.264v52.071l22.548-7.217,19.429-5.887v-51.712L97.885-171.538Z" transform="translate(11.525 5.228)" fill="#c1a67a" stroke="#3c434a" stroke-width="3"/><g transform="translate(44.756 -41.443)"><path d="M61.5,735.7v63.343l-24.077-7.985v-62.8Z" transform="translate(-20.245 -728.259)" fill="#bc3333"/><path d="M20.926,746.322,81.9,764.585v24.8L20.926,769.739Z" transform="translate(-20.926 -732.458)" fill="#bc3333"/></g></g></svg>
+        </div>
+
+        {%- for block in section.blocks -%}
+            {%- case block.type -%}
+                {%- when 'heading' -%}
+                    <!-- Heading -->
+                    <div>
+                        <h1 class="font-bungee text-4xl md:text-5xl">{{ block.settings.heading }}</h1>
+                    </div>
+                {%- when 'statement' -%}
+                    <!-- Statement -->
+                    <div class="max-w-screen-sm mx-auto font-bold text-sm md:text-base flex justify-center text-center md:text-justify">
+                        {{ block.settings.statement }}
+                    </div>
+            {%- endcase -%}
+        {%- endfor -%}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Hero (Home)",
+    "tag": "section",
+    "class": "home-hero",
+    "blocks": [
+        {
+            "type": "heading",
+            "name": "Heading",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading Text",
+                    "default": "Default Heading"
+                }
+            ]
+        },
+        {
+            "type": "statement",
+            "name": "Statement",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "statement",
+                    "label": "Statement Text",
+                    "default": "<p>This is an example statement</p>"
+                }
+            ] 
+        }
+    ],
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "Background Image"
+        }
+    ]
+}
+{% endschema %}

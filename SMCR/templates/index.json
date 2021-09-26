@@ -1,0 +1,34 @@
+{
+    "sections": {
+        "hero": {
+            "type": "home-hero",
+            "blocks": {
+                "heading": {
+                    "type": "heading"
+                },
+                "statement": {
+                    "type": "statement"
+                }
+            },
+            "block_order": [
+                "heading",
+                "statement"
+            ]
+        },
+        "shop_category": { 
+            "type": "home-shop-category",
+            "blocks": {
+                "section_heading": {
+                    "type": "section_heading"
+                }
+            },
+            "block_order": [
+                "section_heading"
+            ]
+        }
+    },
+    "order": [
+        "hero",
+        "shop_category"
+    ]
+}
