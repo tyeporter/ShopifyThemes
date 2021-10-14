@@ -1,0 +1,754 @@
+<div class="px-5 py-6 md:py-14 {%- if section.settings.enable_secondary_background %} bg-smcr-light-blue{%- else %} bg-white{%- endif %}{% if section.settings.enable_top_shadow and section.settings.top_shadow_type == 'inner' %} shadow-top-sf-inset{%- elsif section.settings.enable_top_shadow and section.settings.top_shadow_type == 'outer' %} shadow-top-sf{%- endif %}">
+    <div class="max-w-screen-2xl mx-auto">
+        {%- for block in section.blocks -%}
+            {%- case block.type -%}
+                {%- when 'section_heading' -%}
+                    <!-- Heading -->
+                    <div class="block mb-5">   
+                        {% render 'section-heading', text: block.settings.heading %}
+                    </div>
+                {%- when 'browse_all_link' -%}
+                    <div class="mb-5">
+                        {% render 'browse-all-link', url: block.settings.browse_url, text: block.settings.link_text, alignment: block.settings.link_alignment %}
+                    </div>
+                {% when 'category_links' %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 h-72">
+                            {%- assign links = linklists[block.settings.categories_menu].links -%}
+                            {%- if block.settings.link_count == 4 %} 
+                                {%- render 'category-link', link: links[0], image: block.settings.image_1, backgroundColor: block.settings.color_1 -%}
+
+                                <div class="grid grid-cols-1 gap-4">
+                                    {%- render 'category-link', link: links[1], image: block.settings.image_2, backgroundColor: block.settings.color_2 -%}
+                                    {%- render 'category-link', link: links[2], image: block.settings.image_3, backgroundColor: block.settings.color_3 -%}
+                                </div>
+
+                                {%- render 'category-link', link: links[3], image: block.settings.image_4, backgroundColor: block.settings.color_4 -%}
+                            {%- else %}
+                                {%- for link in links limit: block.settings.link_count %}
+                                    {%- assign image_setting_id = "image_" | append: forloop.index -%}
+                                    {%- assign color_setting_id = "color_" | append: forloop.index -%}
+                                    {%- assign link_image = block.settings[image_setting_id] -%}
+                                    {%- assign link_color = block.settings[color_setting_id] -%}
+                                    {%- render 'category-link', link: link, image: link_image, backgroundColor: link_color -%}
+                                {%- endfor -%}
+                            {%- endif -%}
+                    </div>
+                {% when 'image_links' %}
+                    {%- comment -%}
+                        grid-cols-1 grid-cols-2
+                        grid-cols-3 grid-cols-4
+                    {%- endcomment -%}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ block.settings.link_count }} gap-8 sm:gap-16 items-center w-1/2 mx-auto pt-5">
+                        {%- liquid 
+                            for i in (1..block.settings.link_count)
+                                assign image_setting_id = "image_link_image_" | append: i
+                                assign url_setting_id = "image_link_url_" | append: i
+                                assign image = block.settings[image_setting_id]
+                                assign url = block.settings[url_setting_id]
+                                render 'image-link', url: url, image: image
+                            endfor
+                        -%}
+                    </div>
+                {% when 'featured_items' %}
+                    <div class="block pt-5">
+                        <div class="glider-contain px-5 pb-3 sm:px-14 lg:px-24">
+                            <div class="featured_glider max-w-6xl">
+                                {%- for product in collections[block.settings.featured_collection].products -%}
+                                    {% render 'product-card', product: product %}
+                                {%- endfor -%}
+                            </div>
+                            <button aria-label="Previous" class="glider-prev">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button aria-label="Next" class="glider-next">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% when 'company_history' %}
+                    {%- assign image = block.settings.history_image -%}
+                    <div class="px-5 flex">
+                        <div class="w-6/12 flex justify-end">
+                            <div class="w-11/12 h-96 bg-smcr-light-gray rounded-xl">
+                                {%- if image != blank -%}
+                                    <img src="{{ image | img_url: 'master' }}" alt="{{ image.alt}}" class="w-full h-full">
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        <div class="w-6/12 flex justify-center">
+                            <div class="w-10/12 h-96 flex flex-col justify-between">
+                                <h2 class="text-3xl md:text-4xl text-smcr-navy font-bungee">
+                                    {{ block.settings.history_heading }}
+                                </h2>
+
+                                <p class="font-montserrat text-lg text-smcr-gray font-bold">
+                                    {{ block.settings.history_statement }}
+                                </p>
+                                
+                                {% render 'button-link', text: block.settings.button_text %}
+                            </div>
+                        </div>
+                    </div>
+                {%- when 'customer_benefits' -%}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ block.settings.benefits_count }} gap-8 sm:gap-16 items-center w-full mx-auto mt-10">
+                        {%- for i in (1..block.settings.benefits_count) -%}
+                            <div class="flex flex-col space-y-2 items-center">
+                                <!-- Benefits Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-smcr-gray" viewBox="0 0 20 20" fill="currentColor">
+                                    {%- assign icon_id = "icon_benefit_" | append: i -%}
+                                    {%- if block.settings[icon_id] == "dollar_sign" -%}
+                                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                                    {%- elsif block.settings[icon_id] == "truck" -%}
+                                        <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                        <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                                    {%- elsif block.settings[icon_id] == "star" -%}
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    {%- elsif block.settings[icon_id] == "heart" -%}
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                                    {%- endif -%}
+                                </svg>
+                                <!-- Benefit Heading -->
+                                {%- assign heading_id = "heading_benefit_" | append: i -%}
+                                <h4 class="text-center text-lg font-bold text-smcr-gray">{{ block.settings[heading_id] }}</h4>
+
+                                <!-- Benefit Statement-->
+                                {%- assign statement_id = "statement_benefit_" | append: i -%}
+                                <p class="text-center text-smcr-gray">{{ block.settings[statement_id] }}</p>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                {%- when 'customer_testimonials' -%}
+                <div class="block pt-5">
+                    <div class="glider-contain px-5 pb-3 sm:px-14 lg:px-24 flex flex-col items-center space-y-4">
+                        <div class="testimonial_glider max-w-3xl">
+                            {%- for i in (1..block.settings.testimonial_count) -%}
+                                {%- assign testimonial_id = "testimonial_" | append: i -%}
+                                {%- assign author_id = "testimonial_author_" | append: i -%}
+                                {% render 'customer-testimonial', testimonial: block.settings[testimonial_id], author: block.settings[author_id] %}
+                            {%- endfor -%}
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="182.7" height="29.25" viewBox="0 0 182.7 29.25">
+                            <g id="Group_75" data-name="Group 75" transform="translate(-868.65 -3816.375)">
+                              <path id="Icon_ionic-ios-star" data-name="Icon ionic-ios-star" d="M32.555,13.5H22.212L19.069,4.12a1.139,1.139,0,0,0-2.138,0L13.788,13.5H3.375A1.128,1.128,0,0,0,2.25,14.625a.827.827,0,0,0,.021.19,1.081,1.081,0,0,0,.471.795l8.5,5.991L7.98,31.085a1.128,1.128,0,0,0,.387,1.266A1.088,1.088,0,0,0,9,32.625a1.378,1.378,0,0,0,.7-.253L18,26.459l8.3,5.913a1.318,1.318,0,0,0,.7.253,1.01,1.01,0,0,0,.626-.274,1.114,1.114,0,0,0,.387-1.266L24.75,21.6l8.43-6.047.2-.176a1.18,1.18,0,0,0,.366-.752A1.191,1.191,0,0,0,32.555,13.5Z" transform="translate(866.4 3813)" fill="#d6a547"/>
+                              <path id="Icon_ionic-ios-star-2" data-name="Icon ionic-ios-star" d="M32.555,13.5H22.212L19.069,4.12a1.139,1.139,0,0,0-2.138,0L13.788,13.5H3.375A1.128,1.128,0,0,0,2.25,14.625a.827.827,0,0,0,.021.19,1.081,1.081,0,0,0,.471.795l8.5,5.991L7.98,31.085a1.128,1.128,0,0,0,.387,1.266A1.088,1.088,0,0,0,9,32.625a1.378,1.378,0,0,0,.7-.253L18,26.459l8.3,5.913a1.318,1.318,0,0,0,.7.253,1.01,1.01,0,0,0,.626-.274,1.114,1.114,0,0,0,.387-1.266L24.75,21.6l8.43-6.047.2-.176a1.18,1.18,0,0,0,.366-.752A1.191,1.191,0,0,0,32.555,13.5Z" transform="translate(904.2 3813)" fill="#d6a547"/>
+                              <path id="Icon_ionic-ios-star-3" data-name="Icon ionic-ios-star" d="M32.555,13.5H22.212L19.069,4.12a1.139,1.139,0,0,0-2.138,0L13.788,13.5H3.375A1.128,1.128,0,0,0,2.25,14.625a.827.827,0,0,0,.021.19,1.081,1.081,0,0,0,.471.795l8.5,5.991L7.98,31.085a1.128,1.128,0,0,0,.387,1.266A1.088,1.088,0,0,0,9,32.625a1.378,1.378,0,0,0,.7-.253L18,26.459l8.3,5.913a1.318,1.318,0,0,0,.7.253,1.01,1.01,0,0,0,.626-.274,1.114,1.114,0,0,0,.387-1.266L24.75,21.6l8.43-6.047.2-.176a1.18,1.18,0,0,0,.366-.752A1.191,1.191,0,0,0,32.555,13.5Z" transform="translate(942 3813)" fill="#d6a547"/>
+                              <path id="Icon_ionic-ios-star-4" data-name="Icon ionic-ios-star" d="M32.555,13.5H22.212L19.069,4.12a1.139,1.139,0,0,0-2.138,0L13.788,13.5H3.375A1.128,1.128,0,0,0,2.25,14.625a.827.827,0,0,0,.021.19,1.081,1.081,0,0,0,.471.795l8.5,5.991L7.98,31.085a1.128,1.128,0,0,0,.387,1.266A1.088,1.088,0,0,0,9,32.625a1.378,1.378,0,0,0,.7-.253L18,26.459l8.3,5.913a1.318,1.318,0,0,0,.7.253,1.01,1.01,0,0,0,.626-.274,1.114,1.114,0,0,0,.387-1.266L24.75,21.6l8.43-6.047.2-.176a1.18,1.18,0,0,0,.366-.752A1.191,1.191,0,0,0,32.555,13.5Z" transform="translate(979.8 3813)" fill="#d6a547"/>
+                              <path id="Icon_ionic-ios-star-5" data-name="Icon ionic-ios-star" d="M32.555,13.5H22.212L19.069,4.12a1.139,1.139,0,0,0-2.138,0L13.788,13.5H3.375A1.128,1.128,0,0,0,2.25,14.625a.827.827,0,0,0,.021.19,1.081,1.081,0,0,0,.471.795l8.5,5.991L7.98,31.085a1.128,1.128,0,0,0,.387,1.266A1.088,1.088,0,0,0,9,32.625a1.378,1.378,0,0,0,.7-.253L18,26.459l8.3,5.913a1.318,1.318,0,0,0,.7.253,1.01,1.01,0,0,0,.626-.274,1.114,1.114,0,0,0,.387-1.266L24.75,21.6l8.43-6.047.2-.176a1.18,1.18,0,0,0,.366-.752A1.191,1.191,0,0,0,32.555,13.5Z" transform="translate(1017.6 3813)" fill="#d6a547"/>
+                            </g>
+                        </svg>
+                        <div role="tablist" class="dots"></div>
+                    </div>
+                </div>
+            {%- endcase -%}
+        {%- endfor -%}
+    </div>
+</div>
+<script src="{{ 'glider.min.js' | asset_url }}" type="text/javascript"></script>
+<script>
+    new Glider(document.querySelector('.featured_glider'), {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        draggable: true,
+        arrows: {
+            prev: '.glider-prev',
+            next: '.glider-next'
+        },
+        responsive: [
+            {
+                breakpoint: 858,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 1258,
+                settings: {
+                    slidesToShow: 3,
+                }
+            }
+        ]
+    });
+
+    new Glider(document.querySelector('.testimonial_glider'), {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        draggable: true,
+        dots: '.dots'
+    });
+
+    // var track = document.querySelector(".glider-track");
+    // track.classList.add("justify-center");
+</script>
+
+{% schema %}
+{
+    "name": "Section with Header",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "enable_secondary_background",
+            "label": "Enable Secondary Background",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_top_shadow",
+            "label": "Enable Top Shadow",
+            "default": false
+        },
+        {
+            "type": "radio",
+            "id": "top_shadow_type",
+            "label": "Top Shadow Type",
+            "options": [
+                {
+                    "value": "inner",
+                    "label": "Inner"
+                },
+                {
+                    "value": "outer",
+                    "label": "Outer"
+                }
+            ],
+            "default": "outer"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "section_heading",
+            "name": "Section Heading",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading Text",
+                    "default": "Default Heading"
+                }
+            ]
+        },
+        {
+            "type": "browse_all_link",
+            "name": "Browse All Link",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "url",
+                    "id": "browse_url",
+                    "label": "Link"
+                },
+                {
+                    "type": "text",
+                    "id": "link_text",
+                    "label": "Text",
+                    "default": "Default Link Text"
+                },
+                {
+                    "type": "select",
+                    "id": "link_alignment",
+                    "label": "Horizontal Alignment",
+                    "options": [
+                        {
+                            "value": "start",
+                            "label": "Start"
+                        },
+                        {
+                            "value": "center",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "end",
+                            "label": "End"
+                        }
+                    ],
+                    "default": "start"
+                }
+            ]
+        },
+        {
+            "type": "category_links",
+            "name": "Category Links",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "range",
+                    "id": "link_count",
+                    "label": "Number of Links",
+                    "min": 1,
+                    "max": 4,
+                    "default": 3
+                },
+                {
+                    "type": "link_list",
+                    "id": "categories_menu",
+                    "label": "Categories Menu"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_1",
+                    "label": "First Link Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_2",
+                    "label": "Second Link Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_3",
+                    "label": "Third Link Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_4",
+                    "label": "Fourth Link Image"
+                },
+                {
+                    "type": "select",
+                    "id": "color_1",
+                    "label": "First Link Color",
+                    "options": [
+                        {
+                            "value": "blue",
+                            "label": "Blue"
+                        },
+                        {
+                            "value": "pink",
+                            "label": "Pink"
+                        },
+                        {
+                            "value": "purple",
+                            "label": "Purple"
+                        },
+                        {
+                            "value": "yellow",
+                            "label": "Yellow"
+                        }
+                    ],
+                    "default": "blue"
+                },
+                {
+                    "type": "select",
+                    "id": "color_2",
+                    "label": "Second Link Color",
+                    "options": [
+                        {
+                            "value": "blue",
+                            "label": "Blue"
+                        },
+                        {
+                            "value": "pink",
+                            "label": "Pink"
+                        },
+                        {
+                            "value": "purple",
+                            "label": "Purple"
+                        },
+                        {
+                            "value": "yellow",
+                            "label": "Yellow"
+                        }
+                    ],
+                    "default": "pink"
+                },
+                {
+                    "type": "select",
+                    "id": "color_3",
+                    "label": "Third Link Color",
+                    "options": [
+                        {
+                            "value": "blue",
+                            "label": "Blue"
+                        },
+                        {
+                            "value": "pink",
+                            "label": "Pink"
+                        },
+                        {
+                            "value": "purple",
+                            "label": "Purple"
+                        },
+                        {
+                            "value": "yellow",
+                            "label": "Yellow"
+                        }
+                    ],
+                    "default": "purple"
+                },
+                {
+                    "type": "select",
+                    "id": "color_4",
+                    "label": "Fourth Link Color",
+                    "options": [
+                        {
+                            "value": "blue",
+                            "label": "Blue"
+                        },
+                        {
+                            "value": "pink",
+                            "label": "Pink"
+                        },
+                        {
+                            "value": "purple",
+                            "label": "Purple"
+                        },
+                        {
+                            "value": "yellow",
+                            "label": "Yellow"
+                        }
+                    ],
+                    "default": "yellow"
+                }
+            ]
+        },
+        {
+            "type": "image_links",
+            "name": "Image Links",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "range",
+                    "id": "link_count",
+                    "label": "Number of Links",
+                    "min": 2,
+                    "max": 4,
+                    "default": 3
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_link_image_1",
+                    "label": "First Link Image"
+                },
+                {
+                    "type": "url",
+                    "id": "image_link_url_1",
+                    "label": "First Link URL"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_link_image_2",
+                    "label": "Second Link Image"
+                },
+                {
+                    "type": "url",
+                    "id": "image_link_url_2",
+                    "label": "Second Link URL"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_link_image_3",
+                    "label": "Third Link Image"
+                },
+                {
+                    "type": "url",
+                    "id": "image_link_url_3",
+                    "label": "Third Link URL"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_link_image_4",
+                    "label": "Fourth Link Image"
+                },
+                {
+                    "type": "url",
+                    "id": "image_link_url_4",
+                    "label": "Fourth Link URL"
+                }
+            ]
+        },
+        {
+            "type": "featured_items",
+            "name": "Featured Items",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "featured_collection",
+                    "label": "Featured Collection"
+                }
+            ]
+        },
+        {
+            "type": "company_history",
+            "name": "Company History",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "history_image",
+                    "label": "Featured Image"
+                },
+                {
+                    "type": "text",
+                    "id": "history_heading",
+                    "label": "Heading",
+                    "default": "Default Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "history_statement",
+                    "label": "Statement",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "Button URL"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text",
+                    "default": "History"
+                }
+            ]
+        },
+        {
+            "type": "customer_benefits",
+            "name": "Customer Benefits",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "range",
+                    "id": "benefits_count",
+                    "label": "Number of Benefits",
+                    "min": 2,
+                    "max": 4,
+                    "default": 3
+                },
+                {
+                    "type": "select",
+                    "id": "icon_benefit_1",
+                    "label": "Benefit 1 Icon",
+                    "options": [
+                        {
+                            "value": "dollar_sign",
+                            "label": "Dollar Sign"
+                        },
+                        {
+                            "value": "truck",
+                            "label": "Truck"
+                        },
+                        {
+                            "value": "star",
+                            "label": "Star"
+                        },
+                        {
+                            "value": "heart",
+                            "label": "Heart"
+                        }
+                    ],
+                    "default": "dollar_sign"
+                },
+                {
+                    "type": "text",
+                    "id": "heading_benefit_1",
+                    "label": "Benefit 1 Heading",
+                    "default": "Benefit 1 Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "statement_benefit_1",
+                    "label": "Benefit 1 Statement",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                },
+                {
+                    "type": "select",
+                    "id": "icon_benefit_2",
+                    "label": "Benefit 2 Icon",
+                    "options": [
+                        {
+                            "value": "dollar_sign",
+                            "label": "Dollar Sign"
+                        },
+                        {
+                            "value": "truck",
+                            "label": "Truck"
+                        },
+                        {
+                            "value": "star",
+                            "label": "Star"
+                        },
+                        {
+                            "value": "heart",
+                            "label": "Heart"
+                        }
+                    ],
+                    "default": "dollar_sign"
+                },
+                {
+                    "type": "text",
+                    "id": "heading_benefit_2",
+                    "label": "Benefit 2 Heading",
+                    "default": "Benefit 2 Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "statement_benefit_2",
+                    "label": "Benefit 2 Statement",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                },
+                {
+                    "type": "select",
+                    "id": "icon_benefit_3",
+                    "label": "Benefit 3 Icon",
+                    "options": [
+                        {
+                            "value": "dollar_sign",
+                            "label": "Dollar Sign"
+                        },
+                        {
+                            "value": "truck",
+                            "label": "Truck"
+                        },
+                        {
+                            "value": "star",
+                            "label": "Star"
+                        },
+                        {
+                            "value": "heart",
+                            "label": "Heart"
+                        }
+                    ],
+                    "default": "dollar_sign"
+                },
+                {
+                    "type": "text",
+                    "id": "heading_benefit_3",
+                    "label": "Benefit 3 Heading",
+                    "default": "Benefit 3 Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "statement_benefit_3",
+                    "label": "Benefit 3 Statement",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                },
+                {
+                    "type": "select",
+                    "id": "icon_benefit_4",
+                    "label": "Benefit 4 Icon",
+                    "options": [
+                        {
+                            "value": "dollar_sign",
+                            "label": "Dollar Sign"
+                        },
+                        {
+                            "value": "truck",
+                            "label": "Truck"
+                        },
+                        {
+                            "value": "star",
+                            "label": "Star"
+                        },
+                        {
+                            "value": "heart",
+                            "label": "Heart"
+                        }
+                    ],
+                    "default": "dollar_sign"
+                },
+                {
+                    "type": "text",
+                    "id": "heading_benefit_4",
+                    "label": "Benefit 4 Heading",
+                    "default": "Benefit 4 Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "statement_benefit_4",
+                    "label": "Benefit 4 Statement",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                }
+            ]
+        },
+        {
+            "type": "customer_testimonials",
+            "name": "Customer Testimonials",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "range",
+                    "id": "testimonial_count",
+                    "label": "Number of Testimonials",
+                    "min": 2,
+                    "max": 5,
+                    "default": 3
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_1",
+                    "label": "Testimonial #1",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_author_1",
+                    "label": "Author for Testimonial #1",
+                    "default": "Amy B."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_2",
+                    "label": "Testimonial #2",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_author_2",
+                    "label": "Author for Testimonial #2",
+                    "default": "Amy B."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_3",
+                    "label": "Testimonial #3",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_author_3",
+                    "label": "Author for Testimonial #3",
+                    "default": "Amy B."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_4",
+                    "label": "Testimonial #4",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_author_4",
+                    "label": "Author for Testimonial #4",
+                    "default": "Amy B."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_5",
+                    "label": "Testimonial #5",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_author_5",
+                    "label": "Author for Testimonial #5",
+                    "default": "Amy B."
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "category": "Section",
+            "name": "Section with Header"
+        }
+    ]
+}
+{% endschema %}

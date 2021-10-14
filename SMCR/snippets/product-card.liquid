@@ -1,0 +1,20 @@
+<div class="flex justify-center items-center h-96">
+    <a href="{{ product.url }}" class="flex flex-col bg-white shadow rounded-2xl h-5/6 w-full max-w-xs">
+        <div class="h-1/2 w-full bg-gray-200 rounded-t-2xl">
+            {% assign image = product.featured_media.preview_image %}
+            {% if image != blank %}
+                {%- comment -%}theme-check-disable{%- endcomment -%}
+                <img src="{{ image | img_url: "master" }}" alt="{{ product.title }}" class="w-full h-full object-center object-contain rounded-t-2xl">
+                {%- comment -%}theme-check-enable{%- endcomment -%}
+            {% else %}
+                {{ "product-1" | placeholder_svg_tag:"w-full h-full object-center object-cover" }}
+            {% endif %} 
+        </div>
+        <div class="h-1/2 w-full px-4 flex flex-col justify-center space-y-1 text-smcr-navy">
+            <h4 class="text-lg font-bold">{{ product.title }}</h4>
+            <p class="text-sm">{{ product.vendor }}</p>
+            <p>No Reviews</p>
+            <p class="text-2xl font-bold">{{ product.price | money }}</p>
+        </div>
+    </a>
+</div>

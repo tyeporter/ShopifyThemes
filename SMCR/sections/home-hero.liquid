@@ -3,7 +3,7 @@
     {% if background_image != blank %}#FFFFFF{%- else -%}#707070{% endif %}
 {%- endcapture -%}
 
-<div class="bg-smcr-light-gray {%- if background_image != blank %} text-white{%- else %} text-smcr-gray{%- endif %} overflow-hidden relative">
+<div class="bg-smcr-light-gray {%- if background_image != blank %} text-white{%- else %} text-smcr-gray{%- endif %} overflow-hidden relative -z-1">
     {% if section.settings.background_image != blank %}
         <!-- Background Image -->
         <div class="absolute top-0 bottom-0 left-0 right-0">
@@ -16,7 +16,7 @@
         <div class="absolute top-0 bottom-0 left-0 right-0 bg-black opacity-50"></div>
     {% endif %}
     
-    <div class="max-w-screen-2xl mx-auto px-4 py-24 flex flex-col justify-center space-y-4 text-center relative">
+    <div class="max-w-screen-2xl mx-auto px-4 py-16 md:py-24 flex flex-col justify-center space-y-4 text-center relative">
         
         <!-- Top Left Image -->
         <div class="absolute -top-7 md:-top-14 left-10">
@@ -48,7 +48,6 @@
 {
     "name": "Hero (Home)",
     "tag": "section",
-    "class": "home-hero",
     "blocks": [
         {
             "type": "heading",

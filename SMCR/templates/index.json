@@ -15,11 +15,32 @@
                 "statement"
             ]
         },
-        "shop_category": { 
-            "type": "home-shop-category",
+        "section_with_header": { 
+            "type": "section-with-header",
             "blocks": {
                 "section_heading": {
                     "type": "section_heading"
+                },
+                "browse_all_link": {
+                    "type": "browse_all_link"
+                },
+                "category_links": {
+                    "type": "category_links"
+                },
+                "image_links": {
+                    "type": "image_links"
+                },
+                "featured_items": {
+                    "type": "featured_items"
+                },
+                "company_history": {
+                    "type": "company_history"
+                },
+                "customer_benefits": {
+                    "type": "customer_benefits"
+                },
+                "customer_testimonials": {
+                    "type": "customer_testimonials"
                 }
             },
             "block_order": [
@@ -29,6 +50,6 @@
     },
     "order": [
         "hero",
-        "shop_category"
+        "section_with_header"
     ]
 }
